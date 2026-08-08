@@ -23,13 +23,10 @@
     "NTP servers",
     "DNS servers",
     "Prism Element 1 UUID",
-    "Prism Element 1 Subnet UUID",
     "Prism Element 1 DHCP range",
     "Prism Element 2 UUID",
-    "Prism Element 2 Subnet UUID",
     "Prism Element 2 DHCP range",
     "Prism Element 3 UUID",
-    "Prism Element 3 Subnet UUID",
     "Prism Element 3 DHCP range",
     "Etcd Backup",
     "Etcd Backup Target",
@@ -158,7 +155,7 @@
         "Machine Config Pool",
         "Node Label"
       ],
-      "note": "Pod/Service/Machine networks are edited in CIDR preview. Prism subnet/DHCP are under Infrastructure."
+      "note": "Pod/Service/Machine networks are edited in CIDR preview. Prism PE UUID/DHCP are under Infrastructure; Prism subnet UUIDs are per cluster (Other)."
     },
     {
       "id": "storage-backup",
@@ -290,21 +287,21 @@
           "label": "Quay",
           "enabledKey": "Quay Enabled",
           "detailKey": "Quay",
-          "defaultDetail": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)"
+          "defaultDetail": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)"
         },
         {
           "id": "ocpv",
           "label": "OCP-V",
           "enabledKey": "OCP-V Enabled",
           "detailKey": "OCP-V",
-          "defaultDetail": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements"
+          "defaultDetail": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements"
         },
         {
           "id": "odf",
           "label": "ODF",
           "enabledKey": "ODF Enabled",
           "detailKey": "ODF",
-          "defaultDetail": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "defaultDetail": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles"
         }
       ]
     }
@@ -346,15 +343,12 @@
         "MetalLB IP Range",
         "NTP servers",
         "DNS servers",
-        "Prism Element 1 UUID",
-        "Prism Element 1 Subnet UUID",
         "Prism Element 1 DHCP range",
-        "Prism Element 2 UUID",
-        "Prism Element 2 Subnet UUID",
         "Prism Element 2 DHCP range",
-        "Prism Element 3 UUID",
-        "Prism Element 3 Subnet UUID",
         "Prism Element 3 DHCP range",
+        "Prism Element 1 Subnet UUID",
+        "Prism Element 2 Subnet UUID",
+        "Prism Element 3 Subnet UUID",
         "Machine Config Pool",
         "Node Label",
         "Etcd Backup",
@@ -456,15 +450,12 @@
         "MetalLB IP Range",
         "NTP servers",
         "DNS servers",
-        "Prism Element 1 UUID",
-        "Prism Element 1 Subnet UUID",
         "Prism Element 1 DHCP range",
-        "Prism Element 2 UUID",
-        "Prism Element 2 Subnet UUID",
         "Prism Element 2 DHCP range",
-        "Prism Element 3 UUID",
-        "Prism Element 3 Subnet UUID",
         "Prism Element 3 DHCP range",
+        "Prism Element 1 Subnet UUID",
+        "Prism Element 2 Subnet UUID",
+        "Prism Element 3 Subnet UUID",
         "Machine Config Pool",
         "Node Label",
         "Etcd Backup",
@@ -571,11 +562,8 @@
         "MetalLB IP Range",
         "NTP servers",
         "DNS servers",
-        "Prism Element 1 UUID",
         "Prism Element 1 Subnet UUID",
-        "Prism Element 2 UUID",
         "Prism Element 2 Subnet UUID",
-        "Prism Element 3 UUID",
         "Prism Element 3 Subnet UUID",
         "Machine Config Pool",
         "Node Label",
@@ -809,13 +797,10 @@
       "NTP servers": "TBC",
       "DNS servers": "10.150.2.134, 10.150.2.135",
       "Prism Element 1 UUID": "TBC",
-      "Prism Element 1 Subnet UUID": "TBC",
       "Prism Element 1 DHCP range": "TBC",
       "Prism Element 2 UUID": "TBC",
-      "Prism Element 2 Subnet UUID": "TBC",
       "Prism Element 2 DHCP range": "TBC",
       "Prism Element 3 UUID": "TBC",
-      "Prism Element 3 Subnet UUID": "TBC",
       "Prism Element 3 DHCP range": "TBC",
       "Etcd Backup": "Yes",
       "Etcd Backup Destination": "Dell S3 (TBC)",
@@ -920,15 +905,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1018,11 +1000,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1062,15 +1047,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1161,11 +1143,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1205,15 +1190,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1304,11 +1286,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1348,15 +1333,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1447,11 +1429,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1491,15 +1476,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1590,11 +1572,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1634,15 +1619,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1733,11 +1715,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1777,15 +1762,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -1876,11 +1858,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       },
       {
@@ -1924,11 +1909,8 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
           "Prism Element 1 Subnet UUID",
-          "Prism Element 2 UUID",
           "Prism Element 2 Subnet UUID",
-          "Prism Element 3 UUID",
           "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
@@ -2022,11 +2004,14 @@
           "ACM Enabled": "Required",
           "ACS Enabled": "Required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBC",
+          "Prism Element 2 Subnet UUID": "TBC",
+          "Prism Element 3 Subnet UUID": "TBC"
         }
       }
     ],
@@ -3127,13 +3112,10 @@
       "NTP servers": "TBA",
       "DNS servers": "TBA",
       "Prism Element 1 UUID": "TBA",
-      "Prism Element 1 Subnet UUID": "TBA",
       "Prism Element 1 DHCP range": "TBA",
       "Prism Element 2 UUID": "TBA",
-      "Prism Element 2 Subnet UUID": "TBA",
       "Prism Element 2 DHCP range": "TBA",
       "Prism Element 3 UUID": "TBA",
-      "Prism Element 3 Subnet UUID": "TBA",
       "Prism Element 3 DHCP range": "TBA",
       "Etcd Backup": "Yes",
       "Etcd Backup Destination": "TBA",
@@ -3238,15 +3220,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -3335,11 +3314,14 @@
           "ACM Enabled": "Not required",
           "ACS Enabled": "Not required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBA",
+          "Prism Element 2 Subnet UUID": "TBA",
+          "Prism Element 3 Subnet UUID": "TBA"
         }
       },
       {
@@ -3379,15 +3361,12 @@
           "MetalLB IP Range",
           "NTP servers",
           "DNS servers",
-          "Prism Element 1 UUID",
-          "Prism Element 1 Subnet UUID",
           "Prism Element 1 DHCP range",
-          "Prism Element 2 UUID",
-          "Prism Element 2 Subnet UUID",
           "Prism Element 2 DHCP range",
-          "Prism Element 3 UUID",
-          "Prism Element 3 Subnet UUID",
           "Prism Element 3 DHCP range",
+          "Prism Element 1 Subnet UUID",
+          "Prism Element 2 Subnet UUID",
+          "Prism Element 3 Subnet UUID",
           "Machine Config Pool",
           "Node Label",
           "Etcd Backup",
@@ -3477,11 +3456,14 @@
           "ACM Enabled": "Not required",
           "ACS Enabled": "Not required",
           "OCP-V Enabled": "Not required",
-          "OCP-V": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements",
+          "OCP-V": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements",
           "Quay Enabled": "Not required",
-          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)",
+          "Quay": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)",
           "ODF Enabled": "Not required",
-          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+          "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
+          "Prism Element 1 Subnet UUID": "TBA",
+          "Prism Element 2 Subnet UUID": "TBA",
+          "Prism Element 3 Subnet UUID": "TBA"
         }
       }
     ],
@@ -4500,17 +4482,14 @@
   "prismElementFields": {
     "1": [
       "Prism Element 1 UUID",
-      "Prism Element 1 Subnet UUID",
       "Prism Element 1 DHCP range"
     ],
     "2": [
       "Prism Element 2 UUID",
-      "Prism Element 2 Subnet UUID",
       "Prism Element 2 DHCP range"
     ],
     "3": [
       "Prism Element 3 UUID",
-      "Prism Element 3 Subnet UUID",
       "Prism Element 3 DHCP range"
     ]
   },
@@ -4522,7 +4501,10 @@
   "fieldAliases": {
     "Mirror Registry Server": "Mirror Registry Hostname",
     "Bastion OS": null,
-    "Operators": "Operator list"
+    "Operators": "Operator list",
+    "Prism Element 1 Sunet UUID": "Prism Element 1 Subnet UUID",
+    "Prism Element 2 Sunet UUID": "Prism Element 2 Subnet UUID",
+    "Prism Element 3 Sunet UUID": "Prism Element 3 Subnet UUID"
   },
   "installTypes": [
     "Installer-Provisioned Infrastructure (IPI)",
@@ -4815,13 +4797,10 @@
   ],
   "prismNetworkKeys": [
     "Prism Element 1 UUID",
-    "Prism Element 1 Subnet UUID",
     "Prism Element 1 DHCP range",
     "Prism Element 2 UUID",
-    "Prism Element 2 Subnet UUID",
     "Prism Element 2 DHCP range",
     "Prism Element 3 UUID",
-    "Prism Element 3 Subnet UUID",
     "Prism Element 3 DHCP range"
   ],
   "defaultSharedValues": {
@@ -4861,21 +4840,21 @@
       "label": "Quay",
       "enabledKey": "Quay Enabled",
       "detailKey": "Quay",
-      "defaultDetail": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for ≥1 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay — Deploying the Quay Operator on OpenShift (Prerequisites)"
+      "defaultDetail": "Operator: Red Hat Quay Operator on OpenShift (cluster-admin required)\nOpenShift: 4.5 or later\nCompute (per Quay application pod): 8 GiB memory + 2000 millicores (2 vCPUs); plan capacity for \u22651 app pod per registry\nObject storage (required for image layers): managed via ObjectBucketClaim (e.g. ODF Multicloud Object Gateway / NooBaa) or unmanaged external S3-compatible (AWS S3, GCS, Azure Blob, Nutanix Objects, NetApp ONTAP S3, etc.)\nLocal filesystem storage for image layers is not supported\nDefault StorageClass required for Operator-managed Quay and Clair PostgreSQL PVCs (metadata + vulnerability DB)\nDo not share PostgreSQL or Redis between Quay and Clair (or with other workloads); connection poolers (e.g. pgBouncer) are not supported\nClair vulnerability scanning typically deployed with the registry (managed or external Clair)\nDNS / TLS / route or LoadBalancer ingress for the Quay registry endpoint\nRef: Red Hat Quay \u2014 Deploying the Quay Operator on OpenShift (Prerequisites)"
     },
     {
       "id": "ocpv",
       "label": "OCP-V",
       "enabledKey": "OCP-V Enabled",
       "detailKey": "OCP-V",
-      "defaultDetail": "Operator: OpenShift Virtualization (CNV) — align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization — Preparing the cluster / Hardware and operating system requirements"
+      "defaultDetail": "Operator: OpenShift Virtualization (CNV) \u2014 align Operator version with the cluster OCP z-stream\nPlatform: bare-metal (or bare-metal equivalent) worker nodes recommended for production; nested virt is for lab/PoC only\nCPU: AMD/Intel 64-bit (x86-64-v2); Intel VT-x or AMD-V hardware virtualization extensions enabled; NX flag enabled\nOS: RHCOS on worker nodes that host VMs (RHEL workers are not supported for OpenShift Virtualization)\nHomogeneous CPU features across virt workers preferred (mismatched CPUs can break live migration)\nStorage: default StorageClass for virt (or OCP default); prefer Block volume mode + ReadWriteMany (RWX) for live migration and shared disks\nMark virt default StorageClass with annotation storageclass.kubevirt.io/is-default-virt-class=true when dedicated\nNode capacity: each worker hosting VMs needs ~2 extra cores (2000 millicores) for virt management overhead plus VM vCPU/RAM\nLive migration: shared RWX storage; nodes must support the VM CPU model when using host-model\nNetworking: consider Multus / additional networks / SR-IOV for high-bandwidth or low-latency VM NICs as required\nRef: OpenShift Virtualization \u2014 Preparing the cluster / Hardware and operating system requirements"
     },
     {
       "id": "odf",
       "label": "ODF",
       "enabledKey": "ODF Enabled",
       "detailKey": "ODF",
-      "defaultDetail": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) — recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF “Planning your deployment” — Infrastructure requirements & performance profiles"
+      "defaultDetail": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles"
     }
   ]
 }
