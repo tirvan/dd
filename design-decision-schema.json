@@ -23,11 +23,8 @@
     "NTP servers",
     "DNS servers",
     "Prism Element 1 UUID",
-    "Prism Element 1 DHCP range",
     "Prism Element 2 UUID",
-    "Prism Element 2 DHCP range",
     "Prism Element 3 UUID",
-    "Prism Element 3 DHCP range",
     "Etcd Backup",
     "Etcd Backup Target",
     "Etcd Backup Destination",
@@ -155,7 +152,7 @@
         "Machine Config Pool",
         "Node Label"
       ],
-      "note": "Pod/Service/Machine networks are edited in CIDR preview. Prism PE UUID/DHCP are under Infrastructure; Prism subnet UUIDs are per cluster (Other)."
+      "note": "Pod/Service/Machine networks are edited in CIDR preview. Prism PE UUIDs are under Infrastructure; PE DHCP ranges and subnet UUIDs are per cluster (Other)."
     },
     {
       "id": "storage-backup",
@@ -757,9 +754,9 @@
         "note": ""
       },
       {
-        "key": "Prism Central Credentials",
-        "value": "Create service account",
-        "note": "Service account should have Cloud Native role permission"
+        "key": "Prism Element 1 Name",
+        "value": "",
+        "note": ""
       },
       {
         "key": "Prism Element 1 Endpoint + Port",
@@ -767,7 +764,17 @@
         "note": ""
       },
       {
+        "key": "Prism Element 2 Name",
+        "value": "",
+        "note": ""
+      },
+      {
         "key": "Prism Element 2 Endpoint + Port",
+        "value": "",
+        "note": ""
+      },
+      {
+        "key": "Prism Element 3 Name",
         "value": "",
         "note": ""
       },
@@ -797,11 +804,8 @@
       "NTP servers": "TBC",
       "DNS servers": "10.150.2.134, 10.150.2.135",
       "Prism Element 1 UUID": "TBC",
-      "Prism Element 1 DHCP range": "TBC",
       "Prism Element 2 UUID": "TBC",
-      "Prism Element 2 DHCP range": "TBC",
       "Prism Element 3 UUID": "TBC",
-      "Prism Element 3 DHCP range": "TBC",
       "Etcd Backup": "Yes",
       "Etcd Backup Destination": "Dell S3 (TBC)",
       "Etcd Backup Frequency": "Daily @ 03:00, Retention 7 days",
@@ -1007,7 +1011,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1150,7 +1157,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1293,7 +1303,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1436,7 +1449,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1579,7 +1595,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1722,7 +1741,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -1865,7 +1887,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       },
       {
@@ -2011,7 +2036,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBC",
           "Prism Element 2 Subnet UUID": "TBC",
-          "Prism Element 3 Subnet UUID": "TBC"
+          "Prism Element 3 Subnet UUID": "TBC",
+          "Prism Element 1 DHCP range": "TBC",
+          "Prism Element 3 DHCP range": "TBC",
+          "Prism Element 2 DHCP range": "TBC"
         }
       }
     ],
@@ -2818,9 +2846,9 @@
           "note": ""
         },
         {
-          "key": "Prism Central Credentials",
-          "value": "Create service account",
-          "note": "Service account should have Cloud Native role permission"
+          "key": "Prism Element 1 Name",
+          "value": "",
+          "note": ""
         },
         {
           "key": "Prism Element 1 Endpoint + Port",
@@ -2828,7 +2856,17 @@
           "note": ""
         },
         {
+          "key": "Prism Element 2 Name",
+          "value": "",
+          "note": ""
+        },
+        {
           "key": "Prism Element 2 Endpoint + Port",
+          "value": "",
+          "note": ""
+        },
+        {
+          "key": "Prism Element 3 Name",
           "value": "",
           "note": ""
         },
@@ -3072,9 +3110,9 @@
         "note": ""
       },
       {
-        "key": "Prism Central Credentials",
-        "value": "Create service account",
-        "note": "Service account should have Cloud Native role permission"
+        "key": "Prism Element 1 Name",
+        "value": "",
+        "note": ""
       },
       {
         "key": "Prism Element 1 Endpoint + Port",
@@ -3082,7 +3120,17 @@
         "note": ""
       },
       {
+        "key": "Prism Element 2 Name",
+        "value": "",
+        "note": ""
+      },
+      {
         "key": "Prism Element 2 Endpoint + Port",
+        "value": "",
+        "note": ""
+      },
+      {
+        "key": "Prism Element 3 Name",
         "value": "",
         "note": ""
       },
@@ -3112,11 +3160,8 @@
       "NTP servers": "TBA",
       "DNS servers": "TBA",
       "Prism Element 1 UUID": "TBA",
-      "Prism Element 1 DHCP range": "TBA",
       "Prism Element 2 UUID": "TBA",
-      "Prism Element 2 DHCP range": "TBA",
       "Prism Element 3 UUID": "TBA",
-      "Prism Element 3 DHCP range": "TBA",
       "Etcd Backup": "Yes",
       "Etcd Backup Destination": "TBA",
       "Etcd Backup Frequency": "TBA",
@@ -3321,7 +3366,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBA",
           "Prism Element 2 Subnet UUID": "TBA",
-          "Prism Element 3 Subnet UUID": "TBA"
+          "Prism Element 3 Subnet UUID": "TBA",
+          "Prism Element 1 DHCP range": "TBA",
+          "Prism Element 3 DHCP range": "TBA",
+          "Prism Element 2 DHCP range": "TBA"
         }
       },
       {
@@ -3463,7 +3511,10 @@
           "ODF": "Mode: Internal (local storage devices) unless noted otherwise\nDisk type: SSD only (NVMe / SATA SSD / SAS SSD / SAN). Rotational HDD disks are not supported.\nDevices must be empty (no remaining PV / VG / LV). Prefer same disk size and type on each storage node.\nProduction capacity: minimum 0.5 TiB per storage device.\nTopology: at least 3 worker or infrastructure nodes with locally attached devices; expand in multiples of three (one node per failure domain).\nLocal Storage Operator required when consuming local SSDs.\nPerformance profile: Balanced (default) \u2014 recommended when cluster resources meet guidance.\n  - Lean: minimize CPU/memory in constrained environments\n  - Balanced (default): ~30 logical CPU + 72 GiB memory cluster-wide (with 3 storage devices)\n  - Performance: higher allocation for demanding workloads (e.g. ~45 CPU + 96 GiB)\nIf aggregate resources are below ~30 CPU / 72 GiB RAM, deployment falls back to a minimal cluster.\nRef: Red Hat ODF \u201cPlanning your deployment\u201d \u2014 Infrastructure requirements & performance profiles",
           "Prism Element 1 Subnet UUID": "TBA",
           "Prism Element 2 Subnet UUID": "TBA",
-          "Prism Element 3 Subnet UUID": "TBA"
+          "Prism Element 3 Subnet UUID": "TBA",
+          "Prism Element 1 DHCP range": "TBA",
+          "Prism Element 3 DHCP range": "TBA",
+          "Prism Element 2 DHCP range": "TBA"
         }
       }
     ],
@@ -4216,9 +4267,9 @@
           "note": ""
         },
         {
-          "key": "Prism Central Credentials",
-          "value": "Create service account",
-          "note": "Service account should have Cloud Native role permission"
+          "key": "Prism Element 1 Name",
+          "value": "",
+          "note": ""
         },
         {
           "key": "Prism Element 1 Endpoint + Port",
@@ -4226,7 +4277,17 @@
           "note": ""
         },
         {
+          "key": "Prism Element 2 Name",
+          "value": "",
+          "note": ""
+        },
+        {
           "key": "Prism Element 2 Endpoint + Port",
+          "value": "",
+          "note": ""
+        },
+        {
+          "key": "Prism Element 3 Name",
           "value": "",
           "note": ""
         },
@@ -4539,9 +4600,9 @@
           "note": ""
         },
         {
-          "key": "Prism Central Credentials",
-          "value": "Create service account",
-          "note": "Service account should have Cloud Native role permission"
+          "key": "Prism Element 1 Name",
+          "value": "",
+          "note": ""
         },
         {
           "key": "Prism Element 1 Endpoint + Port",
@@ -4549,7 +4610,17 @@
           "note": ""
         },
         {
+          "key": "Prism Element 2 Name",
+          "value": "",
+          "note": ""
+        },
+        {
           "key": "Prism Element 2 Endpoint + Port",
+          "value": "",
+          "note": ""
+        },
+        {
+          "key": "Prism Element 3 Name",
           "value": "",
           "note": ""
         },
@@ -4797,11 +4868,8 @@
   ],
   "prismNetworkKeys": [
     "Prism Element 1 UUID",
-    "Prism Element 1 DHCP range",
     "Prism Element 2 UUID",
-    "Prism Element 2 DHCP range",
-    "Prism Element 3 UUID",
-    "Prism Element 3 DHCP range"
+    "Prism Element 3 UUID"
   ],
   "defaultSharedValues": {
     "Satellite / Local Repo Packages": "vim tmux wget bash-completion tree nfs-utils net-utils rsync jq podman skopeo buildah httpd httpd-tools openldap openldap-clients bind bind-utils awscli",
